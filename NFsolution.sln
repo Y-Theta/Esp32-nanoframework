@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solutionItems", "solutionItems", "{2E7E2696-D9C5-4BBB-B3A1-1AC167C80C5A}"
 	ProjectSection(SolutionItems) = preProject
 		common.targets = common.targets
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HzRes", "Libs\HzRes\HzRes.csproj", "{FC9AC559-B72B-4756-A59D-9172F2D2847E}"
