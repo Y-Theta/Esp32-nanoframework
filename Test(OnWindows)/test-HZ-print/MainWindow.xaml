@@ -14,10 +14,22 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBox  x:Name="GB1"
+                      TextChanged="GB1_TextChanged" />
+            <TextBox  Grid.Column="1"
+                      x:Name="GB2"
+                      TextChanged="GB1_TextChanged" />
         </Grid>
-        <Frame Grid.Row="1"
-               BorderThickness="0"
-               Style="{x:Null}" />
+        <Grid Grid.Row="1" >
+            <Canvas x:Name="CANVAS"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="64"
+                    Height="64" />
+        </Grid>
     </Grid>
 </Window>
