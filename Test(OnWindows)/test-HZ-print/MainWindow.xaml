@@ -10,21 +10,30 @@
         Width="480">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="32" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24" />
+                <RowDefinition Height="24" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <TextBox x:Name="CH1"
+                     Grid.ColumnSpan="2"
+                     TextChanged="CH1_TextChanged" />
             <TextBox  x:Name="GB1"
+                      Grid.Row="1"
                       TextChanged="GB1_TextChanged" />
             <TextBox  Grid.Column="1"
+                      Grid.Row="1"
                       x:Name="GB2"
                       TextChanged="GB1_TextChanged" />
         </Grid>
-        <Grid Grid.Row="1" >
+        <Grid Grid.Row="1">
             <Canvas x:Name="CANVAS"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"

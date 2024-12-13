@@ -59,7 +59,7 @@ namespace HzRes {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
@@ -69,7 +69,7 @@ namespace HzRes {
                 return ((byte[])(obj));
             }
         }
-        
+
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
