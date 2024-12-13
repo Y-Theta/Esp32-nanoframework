@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="..\..\Libs\HZK\HZK.projitems" Label="Shared" />
+
+	<Import Project="../../common.targets" Condition="Exists('../../common.targets')" />
+	
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<RootNamespace>test_HZ_print</RootNamespace>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Libs\HzRes\HzRes.csproj" />
+	</ItemGroup>
+
+</Project>

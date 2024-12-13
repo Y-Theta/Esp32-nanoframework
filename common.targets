@@ -1,0 +1,11 @@
+<Project>
+
+	<PropertyGroup>
+		<TargetFramework>net47</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>10</LangVersion>
+		<OutputPath>..\..\TestOutput</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	</PropertyGroup>
+	
+</Project>

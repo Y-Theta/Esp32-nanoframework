@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35514.174
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{11A8DD76-328B-46DF-9F39-F559912D0360}") = "HzPrint", "Samples\HzPrint\HzPrint.nfproj", "{6569975A-E94B-4F7A-87F6-3A54F158D638}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-HZ-print", "Test(OnWindows)\test-HZ-print\test-HZ-print.csproj", "{7BD37109-E7F6-49D9-B4FA-B68C53CD8D8E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solutionItems", "solutionItems", "{2E7E2696-D9C5-4BBB-B3A1-1AC167C80C5A}"
+	ProjectSection(SolutionItems) = preProject
+		common.targets = common.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HzRes", "Libs\HzRes\HzRes.csproj", "{FC9AC559-B72B-4756-A59D-9172F2D2847E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HZK", "Libs\HZK\HZK.shproj", "{92F42BE6-DE98-48C1-B721-17C7CF00329C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6569975A-E94B-4F7A-87F6-3A54F158D638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6569975A-E94B-4F7A-87F6-3A54F158D638}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6569975A-E94B-4F7A-87F6-3A54F158D638}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6569975A-E94B-4F7A-87F6-3A54F158D638}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6569975A-E94B-4F7A-87F6-3A54F158D638}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6569975A-E94B-4F7A-87F6-3A54F158D638}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7BD37109-E7F6-49D9-B4FA-B68C53CD8D8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BD37109-E7F6-49D9-B4FA-B68C53CD8D8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BD37109-E7F6-49D9-B4FA-B68C53CD8D8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BD37109-E7F6-49D9-B4FA-B68C53CD8D8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC9AC559-B72B-4756-A59D-9172F2D2847E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC9AC559-B72B-4756-A59D-9172F2D2847E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC9AC559-B72B-4756-A59D-9172F2D2847E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC9AC559-B72B-4756-A59D-9172F2D2847E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Libs\HZK\HZK.projitems*{7bd37109-e7f6-49d9-b4fa-b68c53cd8d8e}*SharedItemsImports = 5
+		Libs\HZK\HZK.projitems*{92f42be6-de98-48c1-b721-17c7cf00329c}*SharedItemsImports = 13
+	EndGlobalSection
+EndGlobal
