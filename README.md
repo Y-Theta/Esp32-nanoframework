@@ -3,4 +3,4 @@ nanoframework roadmap
 
 ####
 - hzkviewer   
-  ![hzk](.\screenshots\viewer.png)
+  ![hzk](screenshots/viewer.png)
