@@ -172,5 +172,11 @@ namespace test_HZ_print
             }
             catch { }
         }
+
+        public enum E1num
+        {
+            A = 1,
+            B = 2
+        }
     }
 }
