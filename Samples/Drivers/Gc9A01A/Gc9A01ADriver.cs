@@ -59,7 +59,7 @@ namespace Gc9A01A
         GC9A01A_INREGEN1 = 0xFE,///< Inter register enable 1
     }
 
-    public enum Color : UInt16
+    public enum Gc9A01Color : UInt16
     {
         GC9A01A_BLACK = 0x0000,       ///<   0,   0,   0
         GC9A01A_NAVY = 0x000F,        ///<   0,   0, 123
@@ -342,7 +342,7 @@ namespace Gc9A01A
             WriteCmd((byte)Command.GC9A01A_MADCTL, new byte[] { ctl }, 1);
         }
 
-        public void ClearScreen(Color bg)
+        public void ClearScreen(Gc9A01Color bg)
         {
             SetWindow(0, 0, 239, 239);
             byte hi = (byte)((UInt16)bg >> 8);
