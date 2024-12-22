@@ -1,18 +1,8 @@
-using Iot.Device.EPaper.Enums;
 using Iot.Device.EPaper;
 
-using nanoFramework.Hardware.Esp32;
-
-using System;
-using System.Device.Gpio;
-using System.Device.Spi;
 using System.Diagnostics;
-using System.Resources;
-using System.Text;
 using System.Threading;
-using nanoFramework.UI;
-using Iot.Device.Ssd13xx;
-using System.Device.I2c;
+
 using IFont = nanoFramework.UI.IFont;
 
 
@@ -20,57 +10,13 @@ namespace HzPrint
 {
     public class Program
     {
+
         public static void Main()
         {
-            Debug.WriteLine("Hello from nanoFramework!");
+            Debug.WriteLine("program Started !");
+            DisplayManager manager = new DisplayManager();
+            manager.InitOled();
 
-            Configuration.SetPinFunction(22, DeviceFunction.I2C1_CLOCK);
-            Configuration.SetPinFunction(21, DeviceFunction.I2C1_DATA);
-
-            Configuration.SetPinFunction(15, DeviceFunction.SPI1_CLOCK);
-            Configuration.SetPinFunction(2, DeviceFunction.SPI1_MOSI);
-
-            using var gpioController = new GpioController(PinNumberingScheme.Logical);
-            // Setup SPI connection with the display
-            var spiConnectionSettings = new SpiConnectionSettings(busId: 1, chipSelectLine: 18)
-            {
-                ClockFrequency = 20000000,
-                Mode = SpiMode.Mode1,
-                ChipSelectLineActiveState = false,
-                Configuration = SpiBusConfiguration.HalfDuplex,
-                DataFlow = DataFlow.MsbFirst,
-            };
-
-            I2cDevice i2cDev = new I2cDevice(new I2cConnectionSettings(1, 0x3c));
-            using var oled = new Ssd1306(i2cDev, Ssd13xx.DisplayResolution.OLED128x64);
-            oled.ClearScreen();
-            using var spiDevice = new SpiDevice(spiConnectionSettings);
-            // Create an instance of the display driver
-            using var display = new Ssd1681_154D67(
-                spiDevice,
-                resetPin: 4,
-                busyPin: 19,
-                dataCommandPin: 5,
-                width: 200,
-                height: 200,
-                gpioController,
-                enableFramePaging: false,
-                shouldDispose: false);
-
-            display.PowerOn();
-            display.Initialize();
-            using Graphics gfx = new Graphics(display);
-            gfx.EPaperDisplay.FrameBuffer.Fill(System.Drawing.Color.White);
-            gfx.EPaperDisplay.Flush();
-            display.PerformFullRefresh();
-
-            oled.DrawFilledRectangle(0, 0, 128, 15, true);
-            oled.Display();
-
-            while (true)
-            {
-                //Thread.Sleep(200);
-            }
 
             Thread.Sleep(Timeout.Infinite);
 
