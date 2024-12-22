@@ -1,19 +1,19 @@
 using Iot.Device.EPaper.Enums;
 using Iot.Device.EPaper;
-using Iot.Device.Ssd13xx;
 
 using nanoFramework.Hardware.Esp32;
 
-using NF_Hanz;
-
 using System;
 using System.Device.Gpio;
-using System.Device.I2c;
 using System.Device.Spi;
 using System.Diagnostics;
 using System.Resources;
 using System.Text;
 using System.Threading;
+using nanoFramework.UI;
+using Iot.Device.Ssd13xx;
+using System.Device.I2c;
+using IFont = nanoFramework.UI.IFont;
 
 
 namespace HzPrint
@@ -41,6 +41,9 @@ namespace HzPrint
                 DataFlow = DataFlow.MsbFirst,
             };
 
+            I2cDevice i2cDev = new I2cDevice(new I2cConnectionSettings(1, 0x3c));
+            using var oled = new Ssd1306(i2cDev, Ssd13xx.DisplayResolution.OLED128x64);
+            oled.ClearScreen();
             using var spiDevice = new SpiDevice(spiConnectionSettings);
             // Create an instance of the display driver
             using var display = new Ssd1681_154D67(
@@ -56,28 +59,17 @@ namespace HzPrint
 
             display.PowerOn();
             display.Initialize();
-            using var gfx = new Graphics(display)
-            {
-                DisplayRotation = Rotation.Degrees90Clockwise
-            };
-            display.Clear();
+            using Graphics gfx = new Graphics(display);
+            gfx.EPaperDisplay.FrameBuffer.Fill(System.Drawing.Color.White);
+            gfx.EPaperDisplay.Flush();
             display.PerformFullRefresh();
 
-            I2cDevice device = I2cDevice.Create(new I2cConnectionSettings(1, 0x3c, I2cBusSpeed.FastMode));
-            Ssd1306 oled = new Ssd1306(device,Ssd13xx.DisplayResolution.OLED128x64);
-            oled.Font = new hzFont();
-            oled.ClearScreen();
+            oled.DrawFilledRectangle(0, 0, 128, 15, true);
+            oled.Display();
 
             while (true)
             {
-                oled.DrawString(0, 0, "一二三", 1);
-                oled.Display();
-
-                display.Clear();
-                DrawString("我喜欢宝宝", oled.Font, gfx);
-                display.Flush();
-                display.PerformFullRefresh();
-                Thread.Sleep(1000);
+                //Thread.Sleep(200);
             }
 
             Thread.Sleep(Timeout.Infinite);
@@ -110,7 +102,7 @@ namespace HzPrint
                         var bit = (item >> x) & 0b1;
                         if (bit > 0)
                         {
-                            gfx.DrawPixel(col, row, System.Drawing.Color.Black);
+                            gfx.EPaperDisplay.FrameBuffer.SetPixel(new System.Drawing.Point(col, row), System.Drawing.Color.Black);
                         }
                         col += 1;
                     }
@@ -123,38 +115,5 @@ namespace HzPrint
 
         }
 
-   
-        public class hzFont : IFont
-        {
-            public override byte Height => 16;
-            public override byte Width => 16;
-
-            public override byte[] this[char character]
-            {
-                get
-                {
-                    try
-                    {
-                        var bytes = UTF8Encoding.UTF8.GetBytes(character.ToString());
-                        byte[] buffer = new byte[32];
-                        var gb = ChineseHelper.Utf2Gb2312(bytes);
-                        var pts = ChineseHelper.GetHanzPoint(gb);
-                        for (int i = 0; i < 32; i++)
-                        {
-                            buffer[i] = ChineseHelper.ReverseByte(pts[i]);
-                        }
-                        return buffer;
-                        //var hanz = Resources.GetBytes(BinaryResources.hzk16h);
-                        //for (int i = 0; i < 32; i++)
-                        //{
-                        //    buffer[i] = hanz[offset + i];
-                        //}
-                    }
-                    catch { }
-
-                    return new byte[0];
-                }
-            }
-        }
     }
 }

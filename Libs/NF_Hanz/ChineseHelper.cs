@@ -3,6 +3,8 @@
 using System;
 using System.Collections;
 
+using static NF_Hanz.ChineseHelper;
+
 namespace NF_Hanz
 {
     /// <summary>
@@ -155,5 +157,38 @@ namespace NF_Hanz
             }
             return hex;
         }
+
+        //public class hzFont 
+        //{
+        //    public override byte Height => 16;
+        //    public override byte Width => 16;
+
+        //    public override byte[] this[char character]
+        //    {
+        //        get
+        //        {
+        //            try
+        //            {
+        //                var bytes = UTF8Encoding.UTF8.GetBytes(character.ToString());
+        //                byte[] buffer = new byte[32];
+        //                var gb = ChineseHelper.Utf2Gb2312(bytes);
+        //                var pts = ChineseHelper.GetHanzPoint(gb);
+        //                for (int i = 0; i < 32; i++)
+        //                {
+        //                    buffer[i] = ChineseHelper.ReverseByte(pts[i]);
+        //                }
+        //                return buffer;
+        //                //var hanz = Resources.GetBytes(BinaryResources.hzk16h);
+        //                //for (int i = 0; i < 32; i++)
+        //                //{
+        //                //    buffer[i] = hanz[offset + i];
+        //                //}
+        //            }
+        //            catch { }
+
+        //            return new byte[0];
+        //        }
+        //    }
+        //}
     }
 }

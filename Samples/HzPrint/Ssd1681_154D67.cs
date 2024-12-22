@@ -1,7 +1,6 @@
 ﻿using Iot.Device.EPaper.Drivers.Ssd168x;
 
 using System;
-using System.Collections.Generic;
 using System.Device.Gpio;
 using System.Device.Spi;
 using System.Text;
