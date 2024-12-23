@@ -1,5 +1,9 @@
+using nanoFramework.Runtime.Native;
+
 using System;
 using System.Diagnostics;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 
 using WeatherDisplay.Service;
@@ -25,10 +29,22 @@ namespace WeatherDisplay
             int mode = -1;
             try
             {
-                var address = Wireless80211.GetCurrentIPAddress();
-                if (address != "0.0.0.0")
+                var connectEnabled = Wireless80211.IsEnabled();
+                if (connectEnabled)
                 {
-                    ipaddress = address;
+                    Wireless80211.ConnectOrSetAp();
+                    for (int i = 0; i < 10; i++)
+                    {
+                        ipaddress = Wireless80211.GetCurrentIPAddress();
+                        if (ipaddress == "0.0.0.0")
+                        {
+                            Thread.Sleep(100);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
                     mode = 1;
                 }
                 else
@@ -46,7 +62,20 @@ namespace WeatherDisplay
 
             _manager.OLED.DrawAppTitle(mode > 0, mode, ipaddress);
 
-            Thread.Sleep(Timeout.Infinite);
+            //if (mode == 1)
+            //{
+            //    Wireless80211.Disable();
+            //    Power.RebootDevice();
+            //}
+
+            WebRequest request = WebRequest.Create(ipaddress);
+            request.Method = "GET";
+
+            while (true)
+            {
+
+                Thread.Sleep(_updateInterval);
+            }
         }
 
         private static void AppRun()

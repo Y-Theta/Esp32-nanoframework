@@ -30,7 +30,6 @@ namespace WeatherDisplay.Service
         public static string GetCurrentIPAddress()
         {
             NetworkInterface ni = NetworkInterface.GetAllNetworkInterfaces()[0];
-
             // get first NI ( Wifi on ESP32 )
             return ni.IPv4Address.ToString();
         }
@@ -66,6 +65,8 @@ namespace WeatherDisplay.Service
         {
             Wireless80211Configuration wconf = GetConfiguration();
             wconf.Options = Wireless80211Configuration.ConfigurationOptions.None | Wireless80211Configuration.ConfigurationOptions.SmartConfig;
+            wconf.Ssid = string.Empty;
+            wconf.Password = string.Empty;
             wconf.SaveConfiguration();
         }
 
@@ -102,7 +103,7 @@ namespace WeatherDisplay.Service
             {
                 wa.Disconnect();
                 // Bug in network helper, we've most likely try to connect before, let's make it manual
-                var res = wa.Connect(ssid, WifiReconnectionKind.Automatic, password);
+                var res = wa.Connect(ssid, WifiReconnectionKind.Manual, password);
                 success = res.ConnectionStatus == WifiConnectionStatus.Success;
                 Console.WriteLine($"Connected: {res.ConnectionStatus}");
             }
