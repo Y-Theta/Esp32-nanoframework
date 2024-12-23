@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,9 +22,13 @@ namespace test_HZ_print
     /// </summary>
     public partial class MainWindow : Window
     {
+        [DllImport("shlwapi.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern int StrCmpLogicalW(string x, string y);
+
         public MainWindow()
         {
             InitializeComponent();
+            var comp = StrCmpLogicalW("", "");
         }
 
         public int GetOffset(byte gb1, byte gb2)
