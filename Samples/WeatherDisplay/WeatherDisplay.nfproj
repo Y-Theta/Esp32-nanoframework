@@ -29,11 +29,11 @@
     <Compile Include="Service\WebServer.cs" />
     <Compile Include="Service\Wireless80211.cs" />
     <Compile Include="Service\WirelessAP.cs" />
+    <Compile Include="Utils\AppDrawExtension.cs" />
     <Compile Include="Utils\BaseFont.cs" />
     <Compile Include="Service\DisplayManager.cs" />
     <Compile Include="Utils\Icons.cs" />
     <Compile Include="Utils\OledExtension.cs" />
-    <Compile Include="Utils\ServerPages.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Iot.Device.DhcpServer">

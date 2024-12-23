@@ -2,7 +2,7 @@
 
 using System;
 
-namespace HzPrint
+namespace WeatherDisplay.Utils
 {
     public static class OledExtension
     {

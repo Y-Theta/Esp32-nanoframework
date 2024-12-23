@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HzPrint
+namespace WeatherDisplay.Utils
 {
     /// <summary>
     /// 

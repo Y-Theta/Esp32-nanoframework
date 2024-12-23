@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 
 using WeatherDisplay.Service;
+using WeatherDisplay.Utils;
 
 namespace WeatherDisplay
 {
@@ -22,6 +23,8 @@ namespace WeatherDisplay
             WirelessAP.SetWifiAp();
             WebServer server = new WebServer();
             server.Start();
+
+            _manager.OLED.DrawAppTitle(false, 0);
 
             Thread.Sleep(Timeout.Infinite);
         }

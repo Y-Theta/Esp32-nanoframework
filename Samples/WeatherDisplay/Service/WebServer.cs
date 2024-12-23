@@ -29,6 +29,7 @@ namespace WeatherDisplay.Service
             if (_listener != null)
                 _listener.Stop();
         }
+
         private void RunServer()
         {
             _listener.Start();
@@ -48,7 +49,6 @@ namespace WeatherDisplay.Service
         {
             var request = context.Request;
             var response = context.Response;
-            string responseString;
             string ssid = null;
             string password = null;
             bool isApSet = false;
@@ -57,10 +57,7 @@ namespace WeatherDisplay.Service
             {
                 case "GET":
                     string[] url = request.RawUrl.Split('?');
-                    if (url[0] == "/favicon.ico")
-                    {
-                    }
-                    else
+                    if (url[0] != "/favicon.ico")
                     {
                         response.ContentType = "text/html";
                         OutPutResponse(response, CreateMainPage("msg"));
@@ -72,20 +69,7 @@ namespace WeatherDisplay.Service
                     Hashtable hashPars = ParseParamsFromStream(request.InputStream);
                     ssid = (string)hashPars["ssid"];
                     password = (string)hashPars["password"];
-
-                    Debug.WriteLine($"Wireless parameters SSID:{ssid} PASSWORD:{password}");
-
-                    string message = "<p>New settings saved.</p><p>Rebooting device to put into normal mode</p>";
-
                     bool res = Wireless80211.Configure(ssid, password);
-                    if (res)
-                    {
-                        message += $"<p>And your new IP address should be {Wireless80211.GetCurrentIPAddress()}.</p>";
-                    }
-
-                    responseString = CreateMainPage(message);
-
-                    OutPutResponse(response, responseString);
                     isApSet = true;
                     break;
             }
@@ -104,27 +88,16 @@ namespace WeatherDisplay.Service
             }
         }
 
-        static string ReplaceMessage(string page, string message)
-        {
-            int index = page.IndexOf("{message}");
-            if (index >= 0)
-            {
-                return page.Substring(0, index) + message + page.Substring(index + 9);
-            }
-
-            return page;
-        }
-
         static void OutPutResponse(HttpListenerResponse response, string responseString)
         {
             var responseBytes = System.Text.Encoding.UTF8.GetBytes(responseString);
             OutPutByteResponse(response, System.Text.Encoding.UTF8.GetBytes(responseString));
         }
+
         static void OutPutByteResponse(HttpListenerResponse response, Byte[] responseBytes)
         {
             response.ContentLength64 = responseBytes.Length;
             response.OutputStream.Write(responseBytes, 0, responseBytes.Length);
-
         }
 
         static Hashtable ParseParamsFromStream(Stream inputStream)
