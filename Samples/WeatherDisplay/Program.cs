@@ -1,22 +1,28 @@
+using nanoFramework.Networking;
 using nanoFramework.Runtime.Native;
 
 using System;
+using System.Device.Wifi;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 
 using WeatherDisplay.Service;
 using WeatherDisplay.Utils;
 
+using GC = nanoFramework.Runtime.Native.GC;
+
 namespace WeatherDisplay
 {
     public class Program
     {
-        static readonly object _displayLock = new object();
-        static DisplayManager _manager;
-        static Thread _displayThread;
-        const int _updateInterval = 60 * 1000;
+        internal static DisplayManager _manager;
+        static Thread _workingThread;
+        const int _updateInterval = 5 * 1000;
+        static HttpClient client;
 
         public static void Main()
         {
@@ -24,6 +30,9 @@ namespace WeatherDisplay
 
             _manager = new DisplayManager();
             _manager.InitOled();
+            client = new HttpClient();
+            client.SslVerification = System.Net.Security.SslVerification.NoVerification;
+            client.Timeout = TimeSpan.FromSeconds(10);
 
             string ipaddress = "x.x.x.x";
             int mode = -1;
@@ -32,7 +41,7 @@ namespace WeatherDisplay
                 var connectEnabled = Wireless80211.IsEnabled();
                 if (connectEnabled)
                 {
-                    Wireless80211.ConnectOrSetAp();
+                    WifiNetworkHelper.Reconnect(true, token: new CancellationTokenSource(1000).Token);
                     for (int i = 0; i < 10; i++)
                     {
                         ipaddress = Wireless80211.GetCurrentIPAddress();
@@ -42,55 +51,51 @@ namespace WeatherDisplay
                         }
                         else
                         {
+                            mode = 1;
+                            _workingThread = new Thread(AppRun);
+                            _workingThread.Start();
                             break;
                         }
                     }
-                    mode = 1;
                 }
-                else
+
+                if (mode < 0)
                 {
                     mode = 0;
+                    EnterSettingMode();
                     var apAddress = WirelessAP.GetIP();
                     ipaddress = apAddress;
-
-                    WirelessAP.SetWifiAp();
-                    WebServer server = new WebServer();
-                    server.Start();
                 }
             }
-            catch { }
+            catch
+            {
+                Power.RebootDevice();
+                return;
+            }
 
             _manager.OLED.DrawAppTitle(mode > 0, mode, ipaddress);
+            Thread.Sleep(Timeout.Infinite);
+        }
 
-            //if (mode == 1)
-            //{
-            //    Wireless80211.Disable();
-            //    Power.RebootDevice();
-            //}
-
-            WebRequest request = WebRequest.Create(ipaddress);
-            request.Method = "GET";
-
+        private static void AppRun()
+        {
             while (true)
             {
+                var response = client.Get("http://example.com");
+                //var stream = response.Content.ReadAsString();
+                response.Dispose();
+                response = null;
+                Debug.WriteLine("1");
 
                 Thread.Sleep(_updateInterval);
             }
         }
 
-        private static void AppRun()
-        {
-
-        }
-
         private static void EnterSettingMode()
         {
-
-        }
-
-        private static void EnterWorkingMode()
-        {
-
+            WirelessAP.SetWifiAp();
+            WebServer server = new WebServer();
+            server.Start();
         }
     }
 }

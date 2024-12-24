@@ -98,7 +98,6 @@ namespace WeatherDisplay.Service
             bool success;
 
             success = WifiNetworkHelper.ConnectDhcp(ssid, password, WifiReconnectionKind.Automatic, true, token: cs.Token);
-
             if (!success)
             {
                 wa.Disconnect();

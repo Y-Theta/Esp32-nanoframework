@@ -53,8 +53,12 @@ namespace WeatherDisplay.Service
         public static void Disable()
         {
             WirelessAPConfiguration wapconf = GetConfiguration();
-            wapconf.Options = WirelessAPConfiguration.ConfigurationOptions.None;
-            wapconf.SaveConfiguration();
+            if (!wapconf.Options.HasFlag(WirelessAPConfiguration.ConfigurationOptions.Disable))
+            {
+                wapconf.Options = WirelessAPConfiguration.ConfigurationOptions.Disable;
+                wapconf.SaveConfiguration();
+                Power.RebootDevice();
+            }
         }
 
         /// <summary>

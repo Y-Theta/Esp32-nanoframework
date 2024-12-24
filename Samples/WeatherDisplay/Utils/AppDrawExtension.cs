@@ -12,7 +12,7 @@ namespace WeatherDisplay.Utils
             oled.DrawFilledRectangle(0, 0, 128, 15, false);
             oled.DrawWifiStatus(wifistatus, false);
             oled.DrawWifiMode(wifimode, false);
-            oled.DrawIPAddress(ip, false);
+            oled.DrawIPAddress(20, 8, ip, false);
         }
 
         public static void DrawWifiStatus(this Ssd1306 oled, bool status, bool clear = true)
@@ -41,13 +41,13 @@ namespace WeatherDisplay.Utils
             oled.DrawString(modestr, 20, 0);
         }
 
-        public static void DrawIPAddress(this Ssd1306 oled, string addr, bool clear = true)
+        public static void DrawIPAddress(this Ssd1306 oled, int x, int y, string addr, bool clear = true)
         {
             if (clear)
-                oled.DrawFilledRectangle(20, 8, 80, 8, false);
+                oled.DrawFilledRectangle(x, y, 80, 8, false);
 
             StringBuilder sb = new StringBuilder();
-            int offset = 20;
+            int offset = x;
             foreach (char c in addr)
             {
                 if (c != '.')
@@ -56,7 +56,7 @@ namespace WeatherDisplay.Utils
                 }
                 else
                 {
-                    oled.DrawString(sb.ToString(), offset, 8);
+                    oled.DrawString(sb.ToString(), offset, y);
                     offset += sb.Length * 8 + 4;
                     sb.Clear();
                 }
@@ -64,9 +64,17 @@ namespace WeatherDisplay.Utils
 
             if (sb.Length > 0)
             {
-                oled.DrawString(sb.ToString(), offset, 8);
+                oled.DrawString(sb.ToString(), offset, y);
             }
         }
 
+        public static void DrawConnectedDevice(this Ssd1306 oled, string addr, bool clear = true)
+        {
+            if (clear)
+                oled.DrawFilledRectangle(0, 16, 128, 8, false);
+
+            oled.DrawFilledRectangle(4, 18, 4, 4);
+            oled.DrawIPAddress(20, 16, addr, false);
+        }
     }
 }
