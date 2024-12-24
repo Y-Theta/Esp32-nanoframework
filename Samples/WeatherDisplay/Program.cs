@@ -1,3 +1,5 @@
+using nanoFramework.M2Mqtt.Messages;
+using nanoFramework.M2Mqtt;
 using nanoFramework.Networking;
 using nanoFramework.Runtime.Native;
 
@@ -6,7 +8,7 @@ using System.Device.Wifi;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 
@@ -22,7 +24,6 @@ namespace WeatherDisplay
         internal static DisplayManager _manager;
         static Thread _workingThread;
         const int _updateInterval = 5 * 1000;
-        static HttpClient client;
 
         public static void Main()
         {
@@ -30,9 +31,6 @@ namespace WeatherDisplay
 
             _manager = new DisplayManager();
             _manager.InitOled();
-            client = new HttpClient();
-            client.SslVerification = System.Net.Security.SslVerification.NoVerification;
-            client.Timeout = TimeSpan.FromSeconds(10);
 
             string ipaddress = "x.x.x.x";
             int mode = -1;
@@ -79,15 +77,33 @@ namespace WeatherDisplay
 
         private static void AppRun()
         {
+            MqttClient mqtt = new MqttClient("211.101.235.6", 2883, false, null, null, MqttSslProtocols.None);
+            mqtt.MqttMsgPublishReceived += Mqtt_MqttMsgPublishReceived;
+            var ret = mqtt.Connect("nanoTestDevice", true);
+            if (ret != MqttReasonCode.Success)
+            {
+                Debug.WriteLine($"ERROR connecting: {ret}");
+                mqtt.Disconnect();
+                return;
+            }
+
+            mqtt.Subscribe(new string[] { "22" }, new MqttQoSLevel[] { MqttQoSLevel.AtLeastOnce });
             while (true)
             {
-                var response = client.Get("http://example.com");
-                //var stream = response.Content.ReadAsString();
-                response.Dispose();
-                response = null;
-                Debug.WriteLine("1");
-
+                if (buffer != null)
+                {
+                    Console.WriteLine($"has buffer {buffer.Length}");
+                }
                 Thread.Sleep(_updateInterval);
+            }
+        }
+
+        private static byte[] buffer = null;
+        private static void Mqtt_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        {
+            if (e.Message != null)
+            {
+                buffer = e.Message;
             }
         }
 
