@@ -29,6 +29,7 @@
     <Compile Include="Service\DisplayManager.cs" />
     <Compile Include="Utils\Icons.cs" />
     <Compile Include="Utils\OledExtension.cs" />
+    <Compile Include="Utils\WeatherModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Iot.Device.DhcpServer">
@@ -48,6 +49,9 @@
     </Reference>
     <Reference Include="nanoFramework.Hardware.Esp32">
       <HintPath>..\..\packages\nanoFramework.Hardware.Esp32.1.6.23\lib\nanoFramework.Hardware.Esp32.dll</HintPath>
+    </Reference>
+    <Reference Include="nanoFramework.Json">
+      <HintPath>..\..\packages\nanoFramework.Json.2.2.154\lib\nanoFramework.Json.dll</HintPath>
     </Reference>
     <Reference Include="nanoFramework.M2Mqtt">
       <HintPath>..\..\packages\nanoFramework.M2Mqtt.5.1.146\lib\nanoFramework.M2Mqtt.dll</HintPath>

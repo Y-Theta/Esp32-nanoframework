@@ -76,5 +76,30 @@ namespace WeatherDisplay.Utils
             oled.DrawFilledRectangle(4, 18, 4, 4);
             oled.DrawIPAddress(20, 16, addr, false);
         }
+
+        public static void DrawTemp(this Ssd1306 oled, int y, string date, int weather, int temph, int templ, bool clear = true)
+        {
+            if (clear)
+                oled.DrawFilledRectangle(0, y, 128, 16, false);
+
+            byte[] icon = null;
+            switch (weather)
+            {
+                case 0:
+                    icon = Icons.IconWeatherSun;
+                    break;
+                case 1:
+                    icon = Icons.IconWeatherCloud;
+                    break;
+                case 2:
+                    icon = Icons.IconWeatherRain;
+                    break;
+            }
+
+            oled.DrawBitmap(icon, 0, y, 16);
+            OledExtension.DrawString(oled, temph.ToString(), 17, y + 4);
+            OledExtension.DrawString(oled, templ.ToString(), 40, y + 4);
+            OledExtension.DrawString(oled, date, 65, y + 4);
+        }
     }
 }

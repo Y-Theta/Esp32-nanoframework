@@ -4,18 +4,14 @@ using nanoFramework.Networking;
 using nanoFramework.Runtime.Native;
 
 using System;
-using System.Device.Wifi;
 using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 
 using WeatherDisplay.Service;
 using WeatherDisplay.Utils;
+using System.IO;
+using System.Text;
 
-using GC = nanoFramework.Runtime.Native.GC;
 
 namespace WeatherDisplay
 {
@@ -23,7 +19,11 @@ namespace WeatherDisplay
     {
         internal static DisplayManager _manager;
         static Thread _workingThread;
-        const int _updateInterval = 5 * 1000;
+        const int _updateInterval = 60 * 1000;
+
+        const string MQTT_server = "211.101.235.6";
+        const string MQTT_client_id = "nano_2044";
+        const string MQTT_topic = "22";
 
         public static void Main()
         {
@@ -77,9 +77,9 @@ namespace WeatherDisplay
 
         private static void AppRun()
         {
-            MqttClient mqtt = new MqttClient("211.101.235.6", 2883, false, null, null, MqttSslProtocols.None);
+            MqttClient mqtt = new MqttClient(MQTT_server, 2883, false, null, null, MqttSslProtocols.None);
             mqtt.MqttMsgPublishReceived += Mqtt_MqttMsgPublishReceived;
-            var ret = mqtt.Connect("nanoTestDevice", true);
+            var ret = mqtt.Connect(MQTT_client_id, true);
             if (ret != MqttReasonCode.Success)
             {
                 Debug.WriteLine($"ERROR connecting: {ret}");
@@ -87,23 +87,62 @@ namespace WeatherDisplay
                 return;
             }
 
-            mqtt.Subscribe(new string[] { "22" }, new MqttQoSLevel[] { MqttQoSLevel.AtLeastOnce });
+            mqtt.Subscribe(new string[] { MQTT_topic }, new MqttQoSLevel[] { MqttQoSLevel.AtLeastOnce });
             while (true)
             {
-                if (buffer != null)
+                try
                 {
-                    Console.WriteLine($"has buffer {buffer.Length}");
+                    if (_lastRequest != null)
+                    {
+                        int offset = 16;
+                        StringBuilder sb = new StringBuilder();
+                        foreach (var item in _lastRequest.result.forecasts)
+                        {
+                            int weather = 0;
+                            switch (item.text_day)
+                            {
+                                case "“ı":
+                                    weather = 1;
+                                    break;
+                                case "«Á":
+                                case "∂‡‘∆":
+                                    weather = 0;
+                                    break;
+                                case "”Í":
+                                    weather = 2;
+                                    break;
+                            }
+
+                            sb.Clear();
+                            for (int i = 0; i < item.date.Length; i++)
+                            {
+                                if (i < 4)
+                                    continue;
+                                sb.Append(item.date[i]);
+                            }
+                            _manager.OLED.DrawTemp(offset, sb.ToString(), weather, item.high, item.low, true);
+                            offset += 16;
+                            if (offset > 63)
+                            {
+                                break;
+                            }
+                        }
+                    }
                 }
+                catch { }
                 Thread.Sleep(_updateInterval);
             }
         }
 
-        private static byte[] buffer = null;
+        private static Root _lastRequest = null;
         private static void Mqtt_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
             if (e.Message != null)
             {
-                buffer = e.Message;
+                using (var stream = new MemoryStream(e.Message))
+                {
+                    _lastRequest = nanoFramework.Json.JsonConvert.DeserializeObject(stream, typeof(Root)) as Root;
+                }
             }
         }
 
